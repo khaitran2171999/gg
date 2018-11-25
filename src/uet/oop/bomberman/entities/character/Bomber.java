@@ -127,18 +127,25 @@ public class Bomber extends Character {
     protected void calculateMove() {
         // TODO: xử lý nhận tín hiệu điều khiển hướng đi từ _input và gọi move() để thực hiện di chuyển
         // TODO: nhớ cập nhật lại giá trị cờ _moving khi thay đổi trạng thái di chuyển
-        int xa = 0, ya = 0;
-        if(_input.up) ya--;
-        if(_input.down) ya++;
-        if(_input.left) xa--;
-        if(_input.right) xa++;
-
-        if(xa != 0 || ya != 0)  {
-            move(xa * Game.getBomberSpeed(), ya * Game.getBomberSpeed());
-            _moving = true;
-        } else {
+        _moving = true;
+        if (_input.up || _input.right || _input.down || _input.left) {
+            if (_input.up) {
+                move(0, -Game.getBomberSpeed());
+            }
+            if (_input.right) {
+                move(Game.getBomberSpeed(), 0);
+            }
+            if (_input.down) {
+                move(0, Game.getBomberSpeed());
+            }
+            if (_input.left) {
+                move(-Game.getBomberSpeed(), 0);
+            }
+        }
+        else {
             _moving = false;
         }
+
     }
 
     @Override
@@ -163,12 +170,16 @@ public class Bomber extends Character {
         if(ya > 0) _direction = 2;
         if(ya < 0) _direction = 0;
 
-        if(canMove(0, ya)) { //separate the moves for the player can slide when is colliding
-            _y += ya;
+        if(canMove(xa, 0)) {
+            if(xa > 0) _direction = 1;
+            if(xa < 0) _direction = 3;
+            _x += xa;
         }
 
-        if(canMove(xa, 0)) {
-            _x += xa;
+        if(canMove(0, ya)) {
+            if(ya > 0) _direction = 2;
+            if(ya < 0) _direction = 0;
+            _y += ya;
         }
     }
 
